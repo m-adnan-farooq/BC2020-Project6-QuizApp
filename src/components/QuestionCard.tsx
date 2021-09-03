@@ -1,37 +1,45 @@
 import React from 'react';
+// Types
+import { AnswerObject } from '../App';
+// Styles
+import { Wrapper, ButtonWrapper } from './QuestionCard.styles';
 
 type Props = {
-    question: string;
-    answers: string[];
-    callback: any;
-    userAnswer: any;
-    questionNr: number;
-    totalQuestions: number;
-}
+  question: string;
+  answers: string[];
+  callback: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  userAnswer: AnswerObject | undefined;
+  questionNr: number;
+  totalQuestions: number;
+};
 
+const QuestionCard: React.FC<Props> = ({
+  question,
+  answers,
+  callback,
+  userAnswer,
+  questionNr,
+  totalQuestions,
+}) => (
+  <Wrapper>
+    <p className='number'>
+      Question: {questionNr} / {totalQuestions}
+    </p>
+    <p dangerouslySetInnerHTML={{ __html: question }} />
+    <div>
+      {answers.map((answer) => (
+        <ButtonWrapper
+          key={answer}
+          correct={userAnswer?.correctAnswer === answer}
+          userClicked={userAnswer?.answer === answer}
+        >
+          <button disabled={userAnswer ? true : false} value={answer} onClick={callback}>
+            <span dangerouslySetInnerHTML={{ __html: answer }} />
+          </button>
+        </ButtonWrapper>
+      ))}
+    </div>
+  </Wrapper>
+);
 
-//React.FC - Specifying that it is a functional component
-//<Props> - refers to the types we are going to use in this FC
-const QuestionCard: React.FC<Props> = ({question, answers, callback, userAnswer,questionNr, totalQuestions}) =>{
-    return(
-        <div>
-            <p className="number">
-                Question: {questionNr}/ {totalQuestions}
-            </p>
-            {/* dangerouslySetInnerHtml={{__html:question}} */}
-            <p> {question}</p>
-            <div>
-                {answers.map((answer)=>(
-                    <div>
-                        <button disabled={userAnswer} onClick={callback}>
-                            {/* dangerouslySetInnerHtml={{__html:answer}} */}
-                            <span>{answer}</span> 
-                        </button>
-                    </div>
-                ))}
-            </div>
-        </div>
-    )
-}
-
-export default QuestionCard
+export default QuestionCard;
